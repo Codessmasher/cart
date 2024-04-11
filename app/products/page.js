@@ -1,15 +1,19 @@
 "use client"
 import callAPI from '../utils/callAPI/page.js';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 // optimize search
 import { debounce } from 'lodash';
 
 // Redux hooks
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // slices
-import { addToCart } from "../redux/slices/cart/page.js";  
-import { setProducts } from '../redux/slices/products/page.js'; 
+import { addToCart } from "../redux/slices/cart/page.js";
+import { setProducts } from '../redux/slices/products/page.js';
+
+// toast messages
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Products() {
   const router = useRouter();
@@ -30,40 +34,43 @@ export default function Products() {
         console.log(err);
         setLoad(false);
       });
-  }, []); 
+  }, []);
 
-// Inside your component
-const debouncedSearchItem = debounce((searchTerm) => {
-  setLoad(true);
-
-  // If search term is empty, reset filter and load all products
-  if (searchTerm === '') {
-    setFilterProducts(products);
-    setLoad(false);
-    return;
-  }
-
-  // Otherwise, filter products based on the search term
-  const searchWords = searchTerm.toLowerCase().split(' ');
-  const filteredProducts = products.filter(product => {
-      return searchWords.map(word =>
-        (product.title && product.title.toLowerCase().includes(word))
-      );
-  });
+  // Inside your component
+  const debouncedSearchItem = debounce((searchTerm) => {
+    setLoad(true);
   
-  setFilterProducts(filteredProducts);
-  setLoad(false);
-}, 500);
-
-const handleSearchChange = (e) => {
-  const searchTerm = e.target.value;
-  setSearch(searchTerm);
-  debouncedSearchItem(searchTerm);
-};
+    // If search term is empty, reset filter and load all products
+    if (!searchTerm) {
+      setFilterProducts(products);
+      setLoad(false);
+      return;
+    }
+  
+    // Otherwise, filter products based on the search term
+    const searchWords = searchTerm.toLowerCase().split(' '); 
+    const filteredProducts = products[0].filter(product => {
+      return searchWords.every(word =>
+        product.title.toLowerCase().includes(word)
+      );
+    });
+  
+    setFilterProducts(filteredProducts);
+    setLoad(false);
+  }, 700);
+  
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearch(searchTerm);
+    debouncedSearchItem(searchTerm);
+  };
+  
+  
 
 
   const add2Cart = (product) => {
-    dispatch(addToCart({ product })); 
+    toast.success('Product added to cart');
+    dispatch(addToCart({ product }));
   };
 
   return (
@@ -104,6 +111,7 @@ const handleSearchChange = (e) => {
         )}
         {!filterProducts.length && !load && <h1 align='center' className="text-blue-700 text-2xl">No products found</h1>}
       </div>
+      <ToastContainer />
     </>
   );
 }

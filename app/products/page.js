@@ -1,68 +1,69 @@
 "use client"
+import callAPI from '../utils/callAPI/page.js';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation'; 
+// optimize search
 import { debounce } from 'lodash';
 
-import { useDispatch } from 'react-redux';
-import { addToCart } from "../redux/cart/page.js";  
+// Redux hooks
+import { useDispatch, useSelector} from 'react-redux';
+// slices
+import { addToCart } from "../redux/slices/cart/page.js";  
+import { setProducts } from '../redux/slices/products/page.js'; 
 
-
-
-export default function products() {
+export default function Products() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [search, setSearch] = useState('');
-  const [load, setLoad] = useState(1);
-  const [products, setProducts] = useState([]);
+  const [load, setLoad] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
-  const dispatch = useDispatch(); // Get the dispatch function
+  const products = useSelector(state => state.products);
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((res) => res.json())
+    callAPI('https://fakestoreapi.com/products')
       .then((data) => {
-        setProducts(data);
+        dispatch(setProducts(data));
         setFilterProducts(data);
-        setLoad(0);
+        setLoad(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoad(0);
+        setLoad(false);
       });
-  }, []);
+  }, []); 
 
-  // Debounce the search functionality for 500 milliseconds
-  const debouncedSearchItem = debounce((searchTerm) => {
-    setLoad(1);
+// Inside your component
+const debouncedSearchItem = debounce((searchTerm) => {
+  setLoad(true);
 
-    if (searchTerm === '') {
-      setFilterProducts(products);
-      setLoad(0);
-      return;
-    }
+  // If search term is empty, reset filter and load all products
+  if (searchTerm === '') {
+    setFilterProducts(products);
+    setLoad(false);
+    return;
+  }
 
-    const searchWords = searchTerm.toLowerCase().split(' ');
-    const filteredProducts = products.filter(product => {
-      return searchWords.some(word =>
-        product.title.toLowerCase().includes(word)
+  // Otherwise, filter products based on the search term
+  const searchWords = searchTerm.toLowerCase().split(' ');
+  const filteredProducts = products.filter(product => {
+      return searchWords.map(word =>
+        (product.title && product.title.toLowerCase().includes(word))
       );
-    });
-    setFilterProducts(filteredProducts);
-    setLoad(0);
-  }, 500);
+  });
+  
+  setFilterProducts(filteredProducts);
+  setLoad(false);
+}, 500);
 
-  const handleSearchChange = (e) => {
-    const searchTerm = e.target.value;
-    setSearch(searchTerm);
-    debouncedSearchItem(searchTerm);
-  };
+const handleSearchChange = (e) => {
+  const searchTerm = e.target.value;
+  setSearch(searchTerm);
+  debouncedSearchItem(searchTerm);
+};
 
-  const add2Cart = (id) => {
-    // Dispatch the addToCart action with the product ID
-    dispatch(addToCart({ id }));
-    // Redirect to the cart page
-    router.push(`/cart`);
+
+  const add2Cart = (product) => {
+    dispatch(addToCart({ product })); 
   };
 
   return (
@@ -92,7 +93,7 @@ export default function products() {
                   <h3 className='text-yellow-500'>{product.title}</h3>
                   <p> 💲{product.price}</p>
                 </div>
-                <button className="btn drop-shadow-md hover:drop-shadow-xl outline bg-green-500 h-10 self-end" onClick={() => add2Cart(product.id)}>Add to Cart</button>
+                <button className="btn drop-shadow-md hover:drop-shadow-xl outline bg-green-500 h-10 self-end" onClick={() => add2Cart(product)}>Add to Cart</button>
               </div>
             ))}
           </main>
@@ -101,9 +102,9 @@ export default function products() {
             Loading...
           </h1>
         )}
-        {!filterProducts.length && <h1 align='center' className="text-blue-700 text-2xl">No products found</h1>}
+        {!filterProducts.length && !load && <h1 align='center' className="text-blue-700 text-2xl">No products found</h1>}
       </div>
-      <ToastContainer />
     </>
   );
 }
+

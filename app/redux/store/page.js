@@ -1,15 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
-import productsReducer from '../products/page.js';
-import cartReducer from '../cart/page.js'
-
-const rootReducer = combineReducers({
-  products: productsReducer,
-  cart: cartReducer,
-});
-
+import productsReducer from '../slices/products/page.js';
+import cartReducer from '../slices/cart/page.js'
+ 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer:{
+    products: productsReducer,
+    cart: cartReducer,
+  }
 });
 
 export default store;

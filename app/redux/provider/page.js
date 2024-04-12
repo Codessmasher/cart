@@ -2,7 +2,7 @@
 import { Provider } from 'react-redux';
 import store from '../store/page.js';  
 
-const provider = ({children}) => {
+const Providers = ({children}) => {
   return (
     <Provider store={store}>
         {children}
@@ -10,4 +10,4 @@ const provider = ({children}) => {
   )
 }
 
-export default provider
+export default Providers 

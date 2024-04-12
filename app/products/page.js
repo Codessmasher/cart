@@ -1,17 +1,9 @@
 "use client"
-import callAPI from '../utils/callAPI/page.js';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-// optimize search
-import { debounce } from 'lodash';
-
-// Redux hooks
 import { useDispatch, useSelector } from 'react-redux';
-// slices
 import { addToCart } from "../redux/slices/cart/page.js";
 import { setProducts } from '../redux/slices/products/page.js';
-
-// toast messages
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,51 +15,49 @@ export default function Products() {
   const [filterProducts, setFilterProducts] = useState([]);
   const products = useSelector(state => state.products);
 
+  // first time products fetch
   useEffect(() => {
-    callAPI('https://fakestoreapi.com/products')
+    fetch('https://fakestoreapi.com/products')
+      .then((res) => res.json())
       .then((data) => {
         dispatch(setProducts(data));
         setFilterProducts(data);
         setLoad(false);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err) => { 
         setLoad(false);
       });
   }, []);
 
-  // Inside your component
-  const debouncedSearchItem = debounce((searchTerm) => {
-    setLoad(true);
-  
-    // If search term is empty, reset filter and load all products
-    if (!searchTerm) {
+  //Custom debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => { 
+      debouncedSearchItem(search);
+    }, 600); // Adjust debounce delay as needed
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const debouncedSearchItem = (searchTerm) => {
+    setLoad(true); 
+    if (searchTerm === '') {
       setFilterProducts(products);
       setLoad(false);
       return;
     }
-  
-    // Otherwise, filter products based on the search term
-    const searchWords = searchTerm.toLowerCase().split(' '); 
-    const filteredProducts = products[0].filter(product => {
-      return searchWords.every(word =>
-        product.title.toLowerCase().includes(word)
-      );
-    });
-  
+    const searchWords = searchTerm.toLowerCase().split(' ');
+    const filteredProducts = products.filter(product =>
+      searchWords.every(word => product.title.toLowerCase().includes(word))
+    );
     setFilterProducts(filteredProducts);
     setLoad(false);
-  }, 700);
-  
-  const handleSearchChange = (e) => {
-    const searchTerm = e.target.value;
-    setSearch(searchTerm);
-    debouncedSearchItem(searchTerm);
   };
-  
-  
+   
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
 
-
+  // cart addition
   const add2Cart = (product) => {
     toast.success('Product added to cart');
     dispatch(addToCart({ product }));
@@ -75,8 +65,8 @@ export default function Products() {
 
   return (
     <>
-      <div className="container">
-        <nav className="nav flex justify-between m-8">
+      <div className="container grid justify-center items-center" style={{minWidth:"100%"}}>
+        <nav className="nav flex justify-between m-8 p-4 bg-teal-500">
           <div className="logo">MyCart</div>
           <div className="searchbar">
             <input
@@ -85,11 +75,9 @@ export default function Products() {
               className="mr-2 rounded-full outline outline-2 outline-offset-2 p-1 sm:w-80 w-20"
               value={search}
               onChange={handleSearchChange}
-            />
-            <button className="p-1 text-blue-500" onClick={() => router.push('/cart')}>
-              CART
-            </button>
+            /> 
           </div>
+              <img src="https://img.icons8.com/?size=30&id=84926&format=png" alt="cart"  onClick={() => router.push('/cart')} className='cursor-pointer'/>
         </nav>
         {!load ? (
           <main className="products m-8  drop-shadow-xl grid sm:grid-cols-4 gap-2">
@@ -115,4 +103,3 @@ export default function Products() {
     </>
   );
 }
-

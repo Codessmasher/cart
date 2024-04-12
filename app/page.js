@@ -1,9 +1,9 @@
 import Products from './products/page.js' 
 
-const home = () => {
+const Home = () => {
   return (
       <Products/>  
   )
 }
 
-export default home
+export default Home

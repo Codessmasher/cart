@@ -1,13 +1,13 @@
 "use client"
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../redux/hooks/page.js';
 import { useRouter } from 'next/navigation';
 import { removeFromCart } from '../redux/slices/cart/page.js'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const Cartpage = () => {
-  const cartItems = useSelector(state => state.cart.value);
-  const dispatch = useDispatch();
+  const cartItems = useAppSelector(state => state.cart.value);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   useEffect(() => {

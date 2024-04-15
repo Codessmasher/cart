@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from '../../redux/hooks/page.js';
 import { addToCart } from "../../redux/slices/cart/page.js";
 import { setProducts } from "@/app/redux/slices/products/page";
 
@@ -10,12 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Products = () => {
   const { pid } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [imageClicked, setImageClicked] = useState(false);
   const [cartAdded, setCartAdded] = useState(false);
   const [product, setProduct] = useState(null); // State to store the matched product
-  const cartItems = useSelector(state => state.cart.value);
+  const cartItems = useAppSelector(state => state.cart.value);
 
 
   useEffect(() => {

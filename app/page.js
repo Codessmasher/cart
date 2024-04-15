@@ -1,8 +1,8 @@
-import Products from './products/page.js' 
+import Products from './products/page.js'
 
 const Home = () => {
   return (
-      <Products/>  
+    <Products />
   )
 }
 

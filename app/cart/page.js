@@ -6,7 +6,7 @@ import { removeFromCart } from '../redux/slices/cart/page.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const Cartpage = () => {
-  const cartItems = useSelector(state => state.cart);
+  const cartItems = useSelector(state => state.cart.value);
   const dispatch = useDispatch();
   const router = useRouter();
 

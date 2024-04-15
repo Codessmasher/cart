@@ -15,7 +15,7 @@ const Products = () => {
   const [imageClicked, setImageClicked] = useState(false);
   const [cartAdded, setCartAdded] = useState(false);
   const [product, setProduct] = useState(null); // State to store the matched product
-  const cartItems = useSelector(state => state.cart);
+  const cartItems = useSelector(state => state.cart.value);
 
 
   useEffect(() => {

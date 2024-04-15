@@ -13,8 +13,8 @@ export default function Products() {
   const [search, setSearch] = useState('');
   const [load, setLoad] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
-  const products = useSelector(state => state.products);
-  const cartItems = useSelector(state => state.cart);
+  const products = useSelector(state => state.products.value);
+  const cartItems = useSelector(state => state.cart.value);
 
 
   // first time products fetch

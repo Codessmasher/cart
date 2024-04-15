@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch, useAppSelector } from '../redux/hooks/page.js';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from "../redux/slices/cart/page.js";
 import { setProducts } from '../redux/slices/products/page.js';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,12 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Products() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [search, setSearch] = useState('');
   const [load, setLoad] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
-  const products = useAppSelector(state => state.products.value);
-  const cartItems = useAppSelector(state => state.cart.value);
+  const products = useSelector(state => state.products);
+  const cartItems = useSelector(state => state.cart);
 
 
   // first time products fetch

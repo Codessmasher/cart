@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { removeFromCart } from '../redux/slices/cart/page.js'; // Assuming you have a removeFromCart action creator
+import { removeFromCart } from '../redux/slices/cart/page.js'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const Cartpage = () => {

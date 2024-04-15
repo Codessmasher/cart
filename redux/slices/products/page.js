@@ -1,3 +1,4 @@
+"use client"
 import { createSlice } from '@reduxjs/toolkit';
 
 const productsSlice = createSlice({
@@ -6,8 +7,8 @@ const productsSlice = createSlice({
   reducers: {
     setProducts(state, action) {
       return action.payload;
-    },
-  },
+    }
+  }
 });
 
 export const { setProducts } = productsSlice.actions;

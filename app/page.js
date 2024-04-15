@@ -1,3 +1,4 @@
+"use client"
 import Products from './products/page.js';
 
 const Home = () => {

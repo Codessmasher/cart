@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from "../redux/slices/cart/page.js";
-import { setProducts } from '../redux/slices/products/page.js';
+import { addToCart } from "../../redux/slices/cart/page.js";
+import { setProducts } from '../../redux/slices/products/page.js';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

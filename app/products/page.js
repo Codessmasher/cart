@@ -4,15 +4,18 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from "../redux/slices/cart/page.js";
 import { setProducts } from '../redux/slices/products/page.js';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Products() {
+const Products=()=> {
   const router = useRouter();
   const dispatch = useDispatch();
+
   const [search, setSearch] = useState('');
   const [load, setLoad] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
+
   const products = useSelector(state => state.products);
   const cartItems = useSelector(state => state.cart);
 
@@ -41,7 +44,7 @@ export default function Products() {
   }, [search]);
 
 
-  
+  // show total cart added items number
   useEffect(() => {
     const itemCount = cartItems.reduce((total) => total + 1, 0);
     document.title = `MyCart (${itemCount})`;
@@ -80,6 +83,7 @@ export default function Products() {
 
   return (
     <>
+    {/* navbar */}
       <nav className="nav flex justify-between sm:m-8 p-4 bg-teal-500">
         <div className="logo text-3xl">MyCart</div>
         <div className="searchbar">
@@ -93,6 +97,7 @@ export default function Products() {
         </div>
         <img src="https://img.icons8.com/?size=40&id=84926&format=png" alt="cart" onClick={() => router.push('/cart')} className='cursor-pointer'/>
       </nav>
+
       <div className="container grid justify-center items-center" style={{minWidth:"100%"}}>
         {!load ? (
           <main className="products m-8 grid sm:grid-cols-4 gap-2">
@@ -118,7 +123,10 @@ export default function Products() {
         )}
         {!filterProducts.length && !load && <h1 align='center' className="text-blue-700 text-2xl">No products found</h1>}
       </div>
+
       <ToastContainer />
     </>
   );
 }
+
+export default Products;

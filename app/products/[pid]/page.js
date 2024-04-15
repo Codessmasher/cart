@@ -3,18 +3,20 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cart/page.js";
-import { setProducts } from "@/app/redux/slices/products/page";
+import { setProducts } from "../../redux/slices/products/page.js";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Products = () => {
+const Item = () => {
   const { pid } = useParams();
-  const dispatch = useDispatch();
   const router = useRouter();
+  
   const [imageClicked, setImageClicked] = useState(false);
   const [cartAdded, setCartAdded] = useState(false);
   const [product, setProduct] = useState(null); // State to store the matched product
+  
+  const dispatch = useDispatch();
   const cartItems = useSelector(state => state.cart);
 
 
@@ -53,9 +55,11 @@ const Products = () => {
 
   return (
     <>
+    {/* nav */}
       <div className="w-100 flex justify-end">
         <img src="https://img.icons8.com/?size=30&id=84926&format=png" alt="cart" onClick={() => router.push('/cart')} className='cursor-pointer m-5' />
       </div>
+
       <main className="grid items-center">
         {product ? ( // Check if product is found
           <div className="grid m-6 sm:grid-cols-2 items-center sm:justify-between">
@@ -92,6 +96,7 @@ const Products = () => {
         ) : (
           <h1 align='center' className="text-2xl m-6">Loading...</h1>
         )}
+
         <ToastContainer />
       </main>
 
@@ -99,4 +104,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Item;
